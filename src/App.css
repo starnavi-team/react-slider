@@ -1,0 +1,17 @@
+.react-slider {
+  width: 180px;
+  height: 20px;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.react-slider__bar {
+  width: 180px;
+  background: #ccc;
+  height: 100%;
+}
+
+.react-slider__handle {
+  width: 20px;
+  height: 20px;
+}
