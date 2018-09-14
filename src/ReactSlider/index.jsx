@@ -3,16 +3,18 @@ import { func, number } from 'prop-types';
 
 export default class ReactSlider extends Component {
   static propTypes = {
-    minValue: number,
-    maxValue: number,
+    min: number,
+    max: number,
+    step: number,
     children: func.isRequired,
     defaultValue: number,
   }
 
   static defaultProps = {
     defaultValue: 0,
-    minValue: 0,
-    maxValue: 100,
+    min: 0,
+    max: 100,
+    step: 1,
   }
 
   constructor(props) {
@@ -24,6 +26,10 @@ export default class ReactSlider extends Component {
     this.state = {
       value: props.defaultValue,
     };
+  }
+
+  componentWillUnmount() {
+    this.removeDocumentListeners();
   }
 
   getGripStyle(style) {
@@ -47,17 +53,38 @@ export default class ReactSlider extends Component {
   getGripProps = customProps => ({
     ...customProps,
     style: this.getGripStyle(customProps.style),
+    onMouseDown: this.handleGripMouseDown(customProps.onMouseDown),
   })
+
+  removeDocumentListeners = () => {
+    document.removeEventListener('mousemove', this.handleDocumentMouseMove);
+    document.removeEventListener('mouseup', this.removeDocumentListeners);
+  }
+
+  handleDocumentMouseMove = (e) => {
+    console.log(e.clientX);
+  }
+
+  handleGripMouseDown(customOnMouseDown) {
+    return (e) => {
+      if (customOnMouseDown) {
+        customOnMouseDown(e);
+      }
+
+      document.addEventListener('mousemove', this.handleDocumentMouseMove);
+      document.addEventListener('mouseup', this.removeDocumentListeners);
+    };
+  }
 
   calcGripOffset() {
     const {
       barLength,
       gripLength,
       state: { value },
-      props: { maxValue, minValue },
+      props: { max, min },
     } = this;
 
-    return (value - minValue) / (maxValue - minValue) * (barLength - gripLength);
+    return (value - min) / (max - min) * (barLength - gripLength);
   }
 
   render() {
