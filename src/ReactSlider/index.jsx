@@ -6,17 +6,15 @@ export default class ReactSlider extends Component {
     min: number,
     max: number,
     step: number,
-    defaultValue: number,
+    value: number.isRequired,
     children: func.isRequired,
-    onChange: func,
+    onChange: func.isRequired,
   }
 
   static defaultProps = {
-    defaultValue: 0,
     min: 0,
     max: 100,
     step: 1,
-    onChange: () => 0,
   }
 
   constructor(props) {
@@ -25,9 +23,10 @@ export default class ReactSlider extends Component {
     this.mouseDownCords = null;
     this.barRef = React.createRef();
     this.gripRef = React.createRef();
-    this.state = {
-      value: props.defaultValue,
-    };
+  }
+
+  componentDidMount() {
+    this.forceUpdate();
   }
 
   componentWillUnmount() {
@@ -67,19 +66,15 @@ export default class ReactSlider extends Component {
       position: 'relative',
       ...customProps.style,
     },
-    innerRef: this.barRef,
-    forceUpdateReactSlider: this.forceUpdateReactSlider,
+    ref: this.barRef,
   })
 
   getGripProps = customProps => ({
     ...customProps,
     style: this.getGripStyle(customProps.style),
     onMouseDown: this.handleGripMouseDown(customProps.onMouseDown),
-    innerRef: this.gripRef,
-    forceUpdateReactSlider: this.forceUpdateReactSlider,
+    ref: this.gripRef,
   })
-
-  forceUpdateReactSlider = () => this.forceUpdate();
 
   handleDocumentMouseUp = () => {
     this.removeDocumentListeners();
@@ -87,10 +82,7 @@ export default class ReactSlider extends Component {
   }
 
   handleDocumentMouseMove = (e) => {
-    const {
-      state: { value },
-      props: { onChange },
-    } = this;
+    const { onChange, value } = this.props;
 
     const newValue = this.getNewValue(e.clientX);
 
@@ -98,11 +90,7 @@ export default class ReactSlider extends Component {
       return;
     }
 
-    this.setState({
-      value: newValue,
-    }, () => {
-      onChange(newValue);
-    });
+    onChange(newValue);
   }
 
   handleGripMouseDown(customOnMouseDown) {
@@ -131,10 +119,7 @@ export default class ReactSlider extends Component {
   }
 
   calcGripOffset() {
-    const {
-      state: { value },
-      props: { max, min },
-    } = this;
+    const { max, min, value } = this.props;
 
     if (!this.barRef.current || !this.gripRef.current) {
       return 0;
