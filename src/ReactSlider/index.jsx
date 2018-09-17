@@ -60,7 +60,7 @@ export default class ReactSlider extends Component {
     return newValue;
   }
 
-  getBarProps = (customProps) => {
+  getBarProps = (customProps = {}) => {
     const {
       provideRefAs,
       style: customStyle,
@@ -82,7 +82,7 @@ export default class ReactSlider extends Component {
     };
   }
 
-  getGripProps = (customProps) => {
+  getGripProps = (customProps = {}) => {
     const {
       provideRefAs,
       style: customStyle,
