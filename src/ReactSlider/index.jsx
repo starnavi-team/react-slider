@@ -60,21 +60,48 @@ export default class ReactSlider extends Component {
     return newValue;
   }
 
-  getBarProps = customProps => ({
-    ...customProps,
-    style: {
-      position: 'relative',
-      ...customProps.style,
-    },
-    ref: this.barRef,
-  })
+  getBarProps = (customProps) => {
+    const {
+      provideRefAs,
+      style: customStyle,
+      ref,
+      ...extraProps
+    } = customProps;
 
-  getGripProps = customProps => ({
-    ...customProps,
-    style: this.getGripStyle(customProps.style),
-    onMouseDown: this.handleGripMouseDown(customProps.onMouseDown),
-    ref: this.gripRef,
-  })
+    if (ref) {
+      ref(this.barRef.current);
+    }
+
+    return {
+      style: {
+        position: 'relative',
+        ...customStyle,
+      },
+      [provideRefAs || 'ref']: this.barRef,
+      ...extraProps,
+    };
+  }
+
+  getGripProps = (customProps) => {
+    const {
+      provideRefAs,
+      style: customStyle,
+      onMouseDown: customOnMouseDown,
+      ref,
+      ...extraProps
+    } = customProps;
+
+    if (ref) {
+      ref(this.barRef.current);
+    }
+
+    return {
+      style: this.getGripStyle(customStyle),
+      onMouseDown: this.handleGripMouseDown(customOnMouseDown),
+      [provideRefAs || 'ref']: this.gripRef,
+      ...extraProps,
+    };
+  }
 
   handleDocumentMouseUp = () => {
     this.removeDocumentListeners();
@@ -123,6 +150,17 @@ export default class ReactSlider extends Component {
 
     if (!this.barRef.current || !this.gripRef.current) {
       return 0;
+    }
+
+    if (!this.barRef.current.offsetWidth) {
+      throw new ReferenceError(`"react-slider" instance barRef.current.offsetWidth is undefined,
+        maybe you forgot to provide "provideRefAs" prop inside getBarProps().
+        Take a look to "provideRefAs" in "react-slider" doc.`);
+    }
+    if (!this.gripRef.current.offsetWidth) {
+      throw new ReferenceError(`"react-slider" instance barRef.current.offsetWidth is undefined,
+        maybe you forgot to provide "provideRefAs" prop inside getBarProps().
+        Take a look to "provideRefAs" in "react-slider" doc.`);
     }
 
     const barLength = this.barRef.current.offsetWidth;

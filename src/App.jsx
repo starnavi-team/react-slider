@@ -1,14 +1,32 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import ReactSlider from './ReactSlider';
-import ReactSliderElement from './ReactSlider/ReactSliderElement';
-import './App.css';
+// import './App.css';
+
+const Slider = styled.div`
+  width: 180px;
+  height: 20px;
+  padding: 10px;
+  border: 1px solid black;
+`;
+
+const SliderBar = styled.div`
+  width: 180px;
+  background: #ccc;
+  height: 100%;
+`;
+
+const SliderGrip = styled.button.attrs({
+  type: 'button',
+})`
+  width: 20px;
+  height: 20px;
+`;
 
 class App extends Component {
-  defaultState = {
-    value: 10,
+  state = {
+    value: 20,
   }
-
-  state = this.defaultState
 
   handleChange = (value) => {
     this.setState({
@@ -18,36 +36,29 @@ class App extends Component {
 
   render() {
     const { value } = this.state;
-    const { value: defaultValue } = this.defaultState;
     return (
       <div className="App">
         <ReactSlider
           min={0}
           max={100}
-          step={5}
-          defaultValue={defaultValue}
+          step={10}
+          value={value}
           onChange={this.handleChange}
         >
-          {({
-            getBarProps,
-            getGripProps,
-          }) => (
-            <div className="react-slider">
-              <ReactSliderElement
+          {({ getBarProps, getGripProps }) => (
+            <Slider>
+              <SliderBar
                 {...getBarProps({
-                  tagName: 'div',
-                  className: 'react-slider__bar',
+                  provideRefAs: 'innerRef',
                 })}
               >
-                <ReactSliderElement
+                <SliderGrip
                   {...getGripProps({
-                    tagName: 'button',
-                    type: 'button',
-                    className: 'react-slider__handle',
+                    provideRefAs: 'innerRef',
                   })}
                 />
-              </ReactSliderElement>
-            </div>
+              </SliderBar>
+            </Slider>
           )}
         </ReactSlider>
         { value }
