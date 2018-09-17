@@ -92,7 +92,7 @@ export default class ReactSlider extends Component {
     } = customProps;
 
     if (ref) {
-      ref(this.barRef.current);
+      ref(this.gripRef.current);
     }
 
     return {
