@@ -158,8 +158,8 @@ export default class ReactSlider extends Component {
         Take a look to "provideRefAs" in "react-slider" doc.`);
     }
     if (!this.gripRef.current.offsetWidth) {
-      throw new ReferenceError(`"react-slider" instance barRef.current.offsetWidth is undefined,
-        maybe you forgot to provide "provideRefAs" prop inside getBarProps().
+      throw new ReferenceError(`"react-slider" instance gripRef.current.offsetWidth is undefined,
+        maybe you forgot to provide "provideRefAs" prop inside getGripProps().
         Take a look to "provideRefAs" in "react-slider" doc.`);
     }
 
