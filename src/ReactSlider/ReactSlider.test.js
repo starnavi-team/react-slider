@@ -183,6 +183,91 @@ it('ReactSlider getGripProps provides correct props with custom props', () => {
   });
 });
 
-// it('ReactSlider gripProps.style.left=20 when value=40, min=20, max=140, barWidth=100, gripWidth=20 ', () => {
-//
-// });
+const testGetNewValue = ({
+  result,
+  min,
+  max,
+  step,
+  barLength,
+  gripLength,
+  gripOffsetLeft,
+  clientX,
+  mouseDownClientX,
+}) => {
+  it(`ReactSlider.prototype.getNewValue() return ${result}
+      for min=${min}, max=${max}, barLength=${barLength},
+      gripLength=${gripLength}, clientX=${clientX}, step=${step}
+      gripOffsetLeft=${gripOffsetLeft}, mouseDownClientX=${mouseDownClientX}`, () => {
+    const context = {
+      props: {
+        min,
+        max,
+        step,
+      },
+      barRef: {
+        current: {
+          offsetWidth: barLength,
+        },
+      },
+      gripRef: {
+        current: {
+          offsetWidth: gripLength,
+        },
+      },
+      mouseDown: {
+        clientX: mouseDownClientX,
+        gripOffsetLeft,
+      },
+    };
+
+    const newValue = ReactSlider.prototype.getNewValue.call(context, clientX);
+
+    expect(newValue).toEqual(result);
+  });
+}
+
+describe('ReactSlider.prototype.getNewValue works correctly', () => {
+  testGetNewValue({
+    result: 30,
+    min: 20,
+    max: 140,
+    step: 10,
+    barLength: 180,
+    gripLength: 20,
+    gripOffsetLeft: 20,
+    clientX: 40,
+    mouseDownClientX: 50,
+  });
+  testGetNewValue({
+    result: 86,
+    min: 50,
+    max: 140,
+    step: 2,
+    barLength: 330,
+    gripLength: 30,
+    gripOffsetLeft: 150,
+    clientX: 250,
+    mouseDownClientX: 280,
+  });
+
+  const min = 0;
+  const max = 140;
+  const result = 35;
+  const getNewValueProps = {
+    step: 5,
+    barLength: 250,
+    gripLength: 50,
+    gripOffsetLeft: 100,
+    clientX: 250,
+    mouseDownClientX: 300,
+  }
+
+  for (let distinction = -50; distinction <= 50; distinction += 10) {
+    testGetNewValue({
+      min: min + distinction,
+      max: max + distinction,
+      result: result + distinction,
+      ...getNewValueProps,
+    });
+  };
+});
