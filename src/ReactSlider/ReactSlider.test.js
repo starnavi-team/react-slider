@@ -194,31 +194,32 @@ const testGetNewValue = ({
   clientX,
   mouseDownClientX,
 }) => {
+  const context = {
+    props: {
+      min,
+      max,
+      step,
+    },
+    barRef: {
+      current: {
+        offsetWidth: barLength,
+      },
+    },
+    gripRef: {
+      current: {
+        offsetWidth: gripLength,
+      },
+    },
+    mouseDown: {
+      clientX: mouseDownClientX,
+      gripOffsetLeft,
+    },
+  };
+
   it(`ReactSlider.prototype.getNewValue() return ${result}
       for min=${min}, max=${max}, barLength=${barLength},
       gripLength=${gripLength}, clientX=${clientX}, step=${step}
       gripOffsetLeft=${gripOffsetLeft}, mouseDownClientX=${mouseDownClientX}`, () => {
-    const context = {
-      props: {
-        min,
-        max,
-        step,
-      },
-      barRef: {
-        current: {
-          offsetWidth: barLength,
-        },
-      },
-      gripRef: {
-        current: {
-          offsetWidth: gripLength,
-        },
-      },
-      mouseDown: {
-        clientX: mouseDownClientX,
-        gripOffsetLeft,
-      },
-    };
 
     const newValue = ReactSlider.prototype.getNewValue.call(context, clientX);
 
@@ -270,4 +271,89 @@ describe('ReactSlider.prototype.getNewValue works correctly', () => {
       ...getNewValueProps,
     });
   };
+});
+
+const testCalcGripOffset = ({
+  errorMessage,
+  result,
+  min,
+  max,
+  value,
+  barLength,
+  gripLength,
+}) => {
+  const context = {
+    props: {
+      min,
+      max,
+      value,
+    },
+    barRef: {
+      current: {
+        offsetWidth: barLength,
+      },
+    },
+    gripRef: {
+      current: {
+        offsetWidth: gripLength,
+      },
+    },
+  };
+
+  if (!barLength) {
+    it(`ReactSlider.prototype.calcGripOffset() show correct error
+    when this.props.barRef.current.offsetWidth == undefined`, () => {
+      expect(ReactSlider.prototype.calcGripOffset.bind(context))
+        .toThrowErrorMatchingSnapshot();
+    });
+  } else if (!gripLength) {
+    it(`ReactSlider.prototype.calcGripOffset() show correct error
+    when this.props.gripRef.current.offsetWidth == undefined`, () => {
+      expect(ReactSlider.prototype.calcGripOffset.bind(context))
+        .toThrowErrorMatchingSnapshot();
+    });
+  } else {
+    it(`ReactSlider.prototype.calcGripOffset() return ${result}
+    for min=${min} max=${max} value=${value} barLength=${barLength} gripLength=${gripLength}`, () => {
+      const newGripOffset = ReactSlider.prototype.calcGripOffset.call(context);
+
+      expect(newGripOffset).toEqual(result);
+    });
+  }
+}
+
+describe('ReactSlider.prototype.calcGripOffset works correctly', () => {
+  const calcGripOffsetProps = {
+    result: 10,
+    min: 0,
+    max: 100,
+    value: 10,
+    barLength: 110,
+    gripLength: 30,
+  }
+
+  const { result, min, max, value, barLength, gripLength } = calcGripOffsetProps;
+
+  testCalcGripOffset({
+    ...calcGripOffsetProps,
+    barLength: null,
+  });
+
+  testCalcGripOffset({
+    ...calcGripOffsetProps,
+    gripLength: null,
+  });
+
+  for (let i = 0; i <= 10; i++) {
+    for (let j = -5; j <= 5; j++) {
+      testCalcGripOffset({
+        result: 8 * i,
+        min: min + j * 10,
+        max: max + j * 10,
+        value: value * i + j * 10,
+        barLength: barLength + j,
+        gripLength: gripLength + j,
+      });
+    }
+  }
 });

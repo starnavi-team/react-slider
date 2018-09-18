@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReactSlider.prototype.calcGripOffset works correctly ReactSlider.prototype.calcGripOffset() show correct error
+    when this.props.barRef.current.offsetWidth == undefined 1`] = `
+"\\"react-slider\\" instance barRef.current.offsetWidth is undefined,
+        maybe you forgot to provide \\"provideRefAs\\" prop inside getBarProps().
+        Take a look to \\"provideRefAs\\" in \\"react-slider\\" doc."
+`;
+
+exports[`ReactSlider.prototype.calcGripOffset works correctly ReactSlider.prototype.calcGripOffset() show correct error
+    when this.props.gripRef.current.offsetWidth == undefined 1`] = `
+"\\"react-slider\\" instance grip.current.offsetWidth is undefined,
+        maybe you forgot to provide \\"provideRefAs\\" prop inside getGripProps().
+        Take a look to \\"provideRefAs\\" in \\"react-slider\\" doc."
+`;
