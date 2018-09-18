@@ -20,7 +20,7 @@ export default class ReactSlider extends Component {
   constructor(props) {
     super(props);
 
-    this.mouseDownCords = null;
+    this.mouseDown = null;
     this.barRef = React.createRef();
     this.gripRef = React.createRef();
   }
@@ -45,15 +45,16 @@ export default class ReactSlider extends Component {
 
   getNewValue(clientX) {
     const { max, min, step } = this.props;
+    const { gripOffsetLeft, clientX: mouseDownClientX } = this.mouseDown;
 
     const barLength = this.barRef.current.offsetWidth;
     const gripLength = this.gripRef.current.offsetWidth;
+
     const scrollableLength = barLength - gripLength;
-    const valuePerOffset = max / scrollableLength;
+    const valuePerOffset = (max - min) / scrollableLength;
+    const offset = gripOffsetLeft + clientX - mouseDownClientX;
 
-    const offset = this.mouseDownOffset + clientX - this.mouseDownCursorCords.x;
-
-    let newValue = valuePerOffset * offset;
+    let newValue = valuePerOffset * offset + min;
     newValue = Math.round(newValue / step) * step;
     newValue = Math.min(Math.max(newValue, min), max);
 
@@ -105,7 +106,7 @@ export default class ReactSlider extends Component {
 
   handleDocumentMouseUp = () => {
     this.removeDocumentListeners();
-    this.mouseDownCords = null;
+    this.mouseDown = null;
   }
 
   handleDocumentMouseMove = (e) => {
@@ -126,14 +127,13 @@ export default class ReactSlider extends Component {
         customOnMouseDown(e);
       }
 
-      this.mouseDownCursorCords = {
-        x: e.clientX,
-        y: e.clientY,
-      };
-
       const barRect = this.barRef.current.getBoundingClientRect();
       const gripRect = this.gripRef.current.getBoundingClientRect();
-      this.mouseDownOffset = gripRect.left - barRect.left;
+
+      this.mouseDown = {
+        clientX: e.clientX,
+        gripOffsetLeft: gripRect.left - barRect.left,
+      };
 
       document.addEventListener('mousemove', this.handleDocumentMouseMove);
       document.addEventListener('mouseup', this.handleDocumentMouseUp);
