@@ -9,7 +9,7 @@ exports[`ReactSlider.prototype.calcGripOffset works correctly ReactSlider.protot
 
 exports[`ReactSlider.prototype.calcGripOffset works correctly ReactSlider.prototype.calcGripOffset() show correct error
     when this.props.gripRef.current.offsetWidth == undefined 1`] = `
-"\\"react-slider\\" instance grip.current.offsetWidth is undefined,
+"\\"react-slider\\" instance gripRef.current.offsetWidth is undefined,
         maybe you forgot to provide \\"provideRefAs\\" prop inside getGripProps().
         Take a look to \\"provideRefAs\\" in \\"react-slider\\" doc."
 `;
