@@ -274,7 +274,6 @@ describe('ReactSlider.prototype.getNewValue works correctly', () => {
 });
 
 const testCalcGripOffset = ({
-  errorMessage,
   result,
   min,
   max,
