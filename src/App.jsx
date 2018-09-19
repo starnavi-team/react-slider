@@ -25,7 +25,7 @@ const SliderGrip = styled.button.attrs({
 
 class App extends Component {
   state = {
-    value: 20,
+    value: 50,
   }
 
   handleChange = (value) => {
@@ -39,9 +39,9 @@ class App extends Component {
     return (
       <div className="App">
         <ReactSlider
-          min={0}
-          max={100}
-          step={10}
+          min={40}
+          max={120}
+          step={7}
           value={value}
           onChange={this.handleChange}
         >
